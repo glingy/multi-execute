@@ -7,7 +7,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let box = vscode.window.showInputBox({
 			 title: 'Eval Expression',
-			 prompt: 'Enter JavaScript Expression to evaluate. x = each selection, i = selection index, n = number of selections, a = readonly array of text selected',
+			 prompt: 'Enter JavaScript Expression to evaluate. (x, i, l, n, a) => expr',
 			 placeHolder: 'x',
 			}).then((expression) => {
 				if (expression != '') {
@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 					editor.edit((edit) => {
 						selections.forEach((selection, i) => {
 							let text = editor.document.getText(selection);
-							let replacement = Function('"use strict";return function(x, i, n, a){return (' + expression + ')}')()(text, i, selections?.length, textSelections);
+							let replacement = Function('"use strict";return function(x, i, l, n, a){return (' + expression + ')}')()(text, i, selections?.length - 1, selections?.length, textSelections);
 							edit.replace(selection, replacement)
 						})
 					})
